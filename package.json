@@ -1,0 +1,30 @@
+{
+  "name": "liri-node-app",
+  "version": "1.0.0",
+  "description": "LIRI will be a command line node app that takes in parameters and gives you back data.",
+  "main": "liri.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fdmoon/Liri-Node-App.git"
+  },
+  "keywords": [
+    "Liri",
+    "Twitter",
+    "Spotify",
+    "OMDB API"
+  ],
+  "author": "Felix Moon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fdmoon/Liri-Node-App/issues"
+  },
+  "homepage": "https://github.com/fdmoon/Liri-Node-App#readme",
+  "dependencies": {
+    "node-spotify-api": "^1.0.7",
+    "request": "^2.83.0",
+    "twitter": "^1.7.1"
+  }
+}
