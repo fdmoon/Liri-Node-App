@@ -47,15 +47,31 @@ function myTweets() {
 		access_token_secret: importKeys.twitterKeys.access_token_secret
 	});
 
-	var params = {screen_name: 'nodejs'};
+	// var params = { screen_name: 'minions2017Sep', count: 20 };
+	var params = { screen_name: 'TexasFootball', count: 20 };	
+
+	// logToFile("Finding my last 20 tweets...\n");
+	logToFile("Finding @TexasFootball last 20 tweets...\n");	
 
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
 		if (error) {
 			return logToFile('Error occurred: ' + error);
 		}
 
-		logToFile(tweets);
+		// console.log(JSON.stringify(tweets, null, 4));
 		// console.log(response);
+
+		for(var i=0; i<tweets.length; i++) {
+			if((i+1) < 10) {
+				logToFile("-[0" + (i+1) + "]--------------------------------------------------------");
+			}
+			else {
+				logToFile("-[" + (i+1) + "]--------------------------------------------------------");
+			}
+			logToFile("* " + tweets[i].created_at);
+			logToFile("* " + tweets[i].text);
+			logToFile("-------------------------------------------------------------\n");
+		}
 	});	
 }
 
@@ -65,10 +81,10 @@ function spotifyThisSong(argv) {
 	for(var i=1; i<argv.length; i++) {
 		songName += (" " + argv[i]);
 	}
-	logToFile("Finding a song <" + songName + ">...");
+	logToFile("Finding a song <" + songName + ">...\n");
 
 	if(songName === undefined) {
-		logToFile("You should add a song name!");
+		logToFile("You should add a song name!\n");
 		return;
 	}
 
@@ -85,8 +101,6 @@ function spotifyThisSong(argv) {
 		// console.log(JSON.stringify(data, null, 4)); 
 
 		var foundSong = data.tracks.items;
-
-		logToFile("\n");
 
 		for(var j=0; j<foundSong.length; j++) {
 			if((j+1) < 10) {
@@ -110,10 +124,10 @@ function movieThis(argv) {
 	for(var i=1; i<argv.length; i++) {
 		movieName += ("+" + argv[i]);
 	}
-	logToFile("Finding a movie <" + movieName + ">...");
+	logToFile("Finding a movie <" + movieName + ">...\n");
 
 	if(movieName === undefined) {
-		logToFile("You should add a movie name!");
+		logToFile("You should add a movie name!\n");
 		return;
 	}
 
@@ -126,7 +140,7 @@ function movieThis(argv) {
 
 			// console.log(JSON.stringify(foundMovie, null, 4));
 
-			logToFile("\n-------------------------------------------------------------");			
+			logToFile("-------------------------------------------------------------");			
 			logToFile("* Title: " + foundMovie.Title);
 			logToFile("* Year: " + foundMovie.Year);
 			logToFile("* IMDB Rating: " + foundMovie.Ratings[0].Value);
