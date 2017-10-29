@@ -57,7 +57,7 @@ function spotifyThisSong(argv) {
 	for(var i=1; i<argv.length; i++) {
 		songName += (" " + argv[i]);
 	}
-	console.log("Finding <" + songName + ">...");
+	console.log("Finding a song <" + songName + ">...");
 
 	if(songName === undefined) {
 		console.log("You should add a song name!");
@@ -102,7 +102,7 @@ function movieThis(argv) {
 	for(var i=1; i<argv.length; i++) {
 		movieName += ("+" + argv[i]);
 	}
-	console.log("Finding <" + movieName + ">...");
+	console.log("Finding a movie <" + movieName + ">...");
 
 	if(movieName === undefined) {
 		console.log("You should add a movie name!");
@@ -110,7 +110,6 @@ function movieThis(argv) {
 	}
 
 	var queryURL = "http://www.omdbapi.com/?t=" + encodeURI(movieName) + "&y=&plot=short&apikey=" + importKeys.omdbapiKey;
-	console.
 
 	request(queryURL, function (error, response, body) {
 		// If the request is successful (i.e. if the response status code is 200)
@@ -137,7 +136,20 @@ function movieThis(argv) {
 }
 
 function doWhatItSays() {
+	fs.readFile("random.txt", "utf8", function(error, data) {
+		if (error) {
+			return console.log('Error occurred: ' + error);
+		}
 
+		var read = data.split(",");
+		var argv = [];
+
+		argv.push(read[1].replace(/\"/g, ""));
+
+		// console.log(read[0] + ", " + argv);
+
+		execCommand(read[0], argv);
+	});
 }
 
 execCommand(command, argArr);
