@@ -5,27 +5,30 @@ var request = require('request');
 var fs = require('fs');
 
 var command = process.argv[2];
+var argArr = process.argv.slice(3, process.argv.length);
 
-switch(command) {
-	case "my-tweets":
-		myTweets();
-		break;
+function execCommand(cmd, argv) {
+	switch(cmd) {
+		case "my-tweets":
+			myTweets();
+			break;
 
-	case "spotify-this-song":
-		spotifyThisSong();
-		break;
+		case "spotify-this-song":
+			spotifyThisSong(argv);
+			break;
 
-	case "movie-this":
-		movieThis();
-		break;
+		case "movie-this":
+			movieThis(argv);
+			break;
 
-	case "do-what-it-says":
-		doWhatItSays();
-		break;
+		case "do-what-it-says":
+			doWhatItSays();
+			break;
 
-	default:
-		console.log("Invalid command! Come again with one of [my-tweets, spotify-this-song, movie-this, do-what-it-says]");
-		break;
+		default:
+			console.log("Invalid command! Come again with one of [my-tweets, spotify-this-song, movie-this, do-what-it-says]");
+			break;
+	}
 }
 
 function myTweets() {
@@ -48,11 +51,11 @@ function myTweets() {
 	});	
 }
 
-function spotifyThisSong() {
-	var songName = process.argv[3];
+function spotifyThisSong(argv) {
+	var songName = argv[0];
 
-	for(var i=4; i<process.argv.length; i++) {
-		songName += (" " + process.argv[i]);
+	for(var i=1; i<argv.length; i++) {
+		songName += (" " + argv[i]);
 	}
 	console.log("Finding <" + songName + ">...");
 
@@ -93,11 +96,11 @@ function spotifyThisSong() {
 	});
 }
 
-function movieThis() {
-	var movieName = process.argv[3];
+function movieThis(argv) {
+	var movieName = argv[0];
 
-	for(var i=4; i<process.argv.length; i++) {
-		movieName += ("+" + process.argv[i]);
+	for(var i=1; i<argv.length; i++) {
+		movieName += ("+" + argv[i]);
 	}
 	console.log("Finding <" + movieName + ">...");
 
@@ -106,7 +109,8 @@ function movieThis() {
 		return;
 	}
 
-	var queryURL = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=" + importKeys.omdbapiKey;
+	var queryURL = "http://www.omdbapi.com/?t=" + encodeURI(movieName) + "&y=&plot=short&apikey=" + importKeys.omdbapiKey;
+	console.
 
 	request(queryURL, function (error, response, body) {
 		// If the request is successful (i.e. if the response status code is 200)
@@ -133,6 +137,8 @@ function movieThis() {
 }
 
 function doWhatItSays() {
-	// fs.read
+
 }
+
+execCommand(command, argArr);
 
