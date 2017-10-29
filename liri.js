@@ -7,7 +7,15 @@ var fs = require('fs');
 var command = process.argv[2];
 var argArr = process.argv.slice(3, process.argv.length);
 
+var dateTime = new Date();
+
+logToFile("\n=============================================================");
+logToFile("| " + dateTime.toString() + " |");
+logToFile("=============================================================\n");
+
 function execCommand(cmd, argv) {
+	logToFile("[*] " + cmd + " <" + argv + ">");
+
 	switch(cmd) {
 		case "my-tweets":
 			myTweets();
@@ -26,7 +34,7 @@ function execCommand(cmd, argv) {
 			break;
 
 		default:
-			console.log("Invalid command! Come again with one of [my-tweets, spotify-this-song, movie-this, do-what-it-says]");
+			logToFile("Invalid command! Come again with one of [my-tweets, spotify-this-song, movie-this, do-what-it-says]");
 			break;
 	}
 }
@@ -43,10 +51,10 @@ function myTweets() {
 
 	client.get('statuses/user_timeline', params, function(error, tweets, response) {
 		if (error) {
-			return console.log('Error occurred: ' + error);
+			return logToFile('Error occurred: ' + error);
 		}
 
-		console.log(tweets);
+		logToFile(tweets);
 		// console.log(response);
 	});	
 }
@@ -57,10 +65,10 @@ function spotifyThisSong(argv) {
 	for(var i=1; i<argv.length; i++) {
 		songName += (" " + argv[i]);
 	}
-	console.log("Finding a song <" + songName + ">...");
+	logToFile("Finding a song <" + songName + ">...");
 
 	if(songName === undefined) {
-		console.log("You should add a song name!");
+		logToFile("You should add a song name!");
 		return;
 	}
 
@@ -71,27 +79,27 @@ function spotifyThisSong(argv) {
 
 	spotify.search({ type: 'track', query: songName, limit: 20 }, function(err, data) {
 		if (err) {
-			return console.log('Error occurred: ' + err);
+			return logToFile('Error occurred: ' + err);
 		}
 
 		// console.log(JSON.stringify(data, null, 4)); 
 
 		var foundSong = data.tracks.items;
 
-		console.log("\n");
+		logToFile("\n");
 
 		for(var j=0; j<foundSong.length; j++) {
 			if((j+1) < 10) {
-				console.log("=[0" + (j+1) + "]========================================================");
+				logToFile("-[0" + (j+1) + "]--------------------------------------------------------");
 			}
 			else {
-				console.log("=[" + (j+1) + "]========================================================");
+				logToFile("-[" + (j+1) + "]--------------------------------------------------------");
 			}
-			console.log("* Artist(s): " + foundSong[j].artists[0].name);
-			console.log("* The song's name: " + foundSong[j].name);
-			console.log("* A preview link: " + foundSong[j].preview_url);
-			console.log("* The album: " + foundSong[j].album.name);
-			console.log("=============================================================\n");
+			logToFile("* Artist(s): " + foundSong[j].artists[0].name);
+			logToFile("* The song's name: " + foundSong[j].name);
+			logToFile("* A preview link: " + foundSong[j].preview_url);
+			logToFile("* The album: " + foundSong[j].album.name);
+			logToFile("-------------------------------------------------------------\n");
 		}
 	});
 }
@@ -102,10 +110,10 @@ function movieThis(argv) {
 	for(var i=1; i<argv.length; i++) {
 		movieName += ("+" + argv[i]);
 	}
-	console.log("Finding a movie <" + movieName + ">...");
+	logToFile("Finding a movie <" + movieName + ">...");
 
 	if(movieName === undefined) {
-		console.log("You should add a movie name!");
+		logToFile("You should add a movie name!");
 		return;
 	}
 
@@ -118,19 +126,19 @@ function movieThis(argv) {
 
 			// console.log(JSON.stringify(foundMovie, null, 4));
 
-			console.log("\n=============================================================");
-			console.log("* Title: " + foundMovie.Title);
-			console.log("* Year: " + foundMovie.Year);
-			console.log("* IMDB Rating: " + foundMovie.Ratings[0].Value);
-			console.log("* Rotten Tomatoes Rating: " + foundMovie.Ratings[1].Value);
-			console.log("* Country: " + foundMovie.Country);
-			console.log("* Language: " + foundMovie.Language);
-			console.log("* Plot: " + foundMovie.Plot);
-			console.log("* Actors: " + foundMovie.Actors);			
-			console.log("=============================================================\n");
+			logToFile("\n-------------------------------------------------------------");			
+			logToFile("* Title: " + foundMovie.Title);
+			logToFile("* Year: " + foundMovie.Year);
+			logToFile("* IMDB Rating: " + foundMovie.Ratings[0].Value);
+			logToFile("* Rotten Tomatoes Rating: " + foundMovie.Ratings[1].Value);
+			logToFile("* Country: " + foundMovie.Country);
+			logToFile("* Language: " + foundMovie.Language);
+			logToFile("* Plot: " + foundMovie.Plot);
+			logToFile("* Actors: " + foundMovie.Actors);			
+			logToFile("-------------------------------------------------------------\n");
 		}
 		else {
-			console.log('Error occurred: ' + error);
+			logToFile('Error occurred: ' + error);
 		}
 	});
 }
@@ -138,7 +146,7 @@ function movieThis(argv) {
 function doWhatItSays() {
 	fs.readFile("random.txt", "utf8", function(error, data) {
 		if (error) {
-			return console.log('Error occurred: ' + error);
+			return logToFile('Error occurred: ' + error);
 		}
 
 		var read = data.split(",");
@@ -150,6 +158,13 @@ function doWhatItSays() {
 
 		execCommand(read[0], argv);
 	});
+}
+
+function logToFile(str) {
+	console.log(str);
+
+	// Use appendFileSync to log data in order
+	fs.appendFileSync("log.txt", str+"\n");
 }
 
 execCommand(command, argArr);
